@@ -1,28 +1,20 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { COLORS, SIZES, SHADOWS } from "./constant/Theme";
+import { StyleSheet, Text, View, SafeAreaView, StatusBar } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import Index from "./Navigation/Index";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text style={[styles.text, SHADOWS.small]}>
-        Open up App.js to start working on your app!
-      </Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <NavigationContainer>
+        <Index />
+      </NavigationContainer>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  text: {
-    fontSize: SIZES.medium,
-    height: 200,
-    width: "90%",
+    paddingTop: StatusBar.currentHeight,
   },
 });
