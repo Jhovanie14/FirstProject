@@ -7,12 +7,39 @@ import {
   Platform,
   Image,
   TouchableOpacity,
+  Keyboard,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { COLORS, SIZES } from "../../constant/Theme";
 import styles from "../../styles/Login";
+import Input from "../../components/Input";
+import ButtonSubmit from "../../components/ButtonSubmit";
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState({});
+
+  const validateForm = () => {
+    let errors = {};
+    if (!email) errors.email = "Email is required";
+    if (!password) errors.password = "Password is required";
+
+    setError(errors);
+
+    return Object.keys(errors).length === 0;
+  };
+  const handleSubmit = () => {
+    if (validateForm()) {
+      console.log("submitted", email, password);
+      Keyboard.dismiss();
+      navigation.navigate("Bottom Stack", { screen: "Home" });
+      setEmail("");
+      setPassword("");
+
+      setError({});
+    }
+  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -30,42 +57,53 @@ export default function LoginScreen() {
           </Text>
         </View>
         <Text style={styles.textLabel}>Your email</Text>
-        <TextInput
+        <Input
+          value={email}
+          onChangeText={setEmail}
           style={styles.input}
-          placeholder="Enter Username"
+          placeholder="Enter Email"
           placeholderTextColor={COLORS.lightWhite}
-          place
         />
+        {error.email ? (
+          <Text style={styles.errorText}>{error.email}</Text>
+        ) : null}
         <Text style={styles.textLabel}>Password</Text>
-        <TextInput
+        <Input
+          value={password}
+          onChangeText={setPassword}
           style={styles.input}
           placeholder="Enter your password"
           placeholderTextColor={COLORS.lightWhite}
           place
         />
-        <Text
-          style={{
-            alignSelf: "flex-end",
-            color: COLORS.lightWhite,
-            marginBottom: 20,
-          }}>
-          Forgot password?
-        </Text>
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#952f8f",
-            height: 40,
-            justifyContent: "center",
-            borderRadius: 12,
-          }}>
+        {error.password ? (
+          <Text style={styles.errorText}>{error.password}</Text>
+        ) : null}
+        <View style={{ alignItems: "flex-end" }}>
           <Text
             style={{
-              fontSize: SIZES.medium,
-              fontWeight: "bold",
-              alignSelf: "center",
-              color: COLORS.lightWhite,
+              marginBottom: 20,
             }}>
-            Log in
+            Forgot password?
+          </Text>
+        </View>
+        <ButtonSubmit text="Log in" onPress={handleSubmit} />
+      </View>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          marginBottom: 40,
+        }}>
+        <Text style={{}}>Don't have an account? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+          <Text
+            style={{
+              fontWeight: "bold",
+              color: "#2b81bf",
+            }}>
+            Sign up
           </Text>
         </TouchableOpacity>
       </View>
